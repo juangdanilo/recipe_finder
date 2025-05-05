@@ -4,18 +4,10 @@ import 'package:recipe_finder/models/recipe.dart';
 
 class RecipeApi {
   static Future<List<Recipe>> getRecipe() async {
-    final uri = Uri.https('low-carb-recipes.p.rapidapi.com', '/search', {
-      "name": "cake",
-      "tags": "keto",
-      "limit": "10",
-    });
+    final uri = Uri.https('run.mocky.io', '/v3/20208f35-57f0-4261-a78a-7769f090e214');
 
     final response = await http.get(
-      uri,
-      headers: {
-        "x-rapidapi-key": "API KEY HERE",
-        "x-rapidapi-host": "low-carb-recipes.p.rapidapi.com",
-      },
+      uri
     );
 
     List<dynamic> data = jsonDecode(response.body);

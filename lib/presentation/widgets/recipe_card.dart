@@ -74,7 +74,7 @@ class RecipeCard extends StatelessWidget {
                               color: Colors.orange, size: 16),
                           const SizedBox(width: 4),
                           Text(
-                            (random.nextDouble() * 5 + 3).toString(),
+                            (random.nextDouble() * 3.0 + 2).toStringAsFixed(1),
                             style: const TextStyle(color: Colors.orange),
                           ),
                         ],

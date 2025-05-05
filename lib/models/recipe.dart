@@ -6,9 +6,9 @@ class Recipe {
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
-      name: json['name'],
-      totalTime: json['prepareTime'],
-      image: json['image']
+        name: json['name'],
+        totalTime: json['prepareTime'],
+        image: json['image']
     );
   }
 
@@ -17,7 +17,7 @@ class Recipe {
         required this.image,
         //required this.rating,
         required this.totalTime});
-  
+
   static List<Recipe> recipesFromSnapshot(List snapshot) {
     return snapshot.map((data) {
       return Recipe.fromJson(data);

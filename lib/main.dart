@@ -11,33 +11,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight: 200,
-              flexibleSpace: FlexibleSpaceBar(
-                title: const Text("Recipe Finder", style: TextStyle(color: Colors.white)),
-                background: Image.network(
-                  'https://example.com/your_image.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SliverFillRemaining(
-
-            ),
-            SliverToBoxAdapter(
-              child: const RecipePage(),
-            ),
-          ],
-        )
-        // appBar: AppBar(
-        //   centerTitle: true,
-        //   title: const Text("Recipe Finder"),
-        // ),
-        // body: const RecipePage(),
+        body: const RecipePage(),
       ),
     );
   }
