@@ -70,34 +70,32 @@ class _RecipePageState extends State<RecipePage> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          pinned: true,
           expandedHeight: 200,
-          backgroundColor: const Color(0xFFBAD8B6),
+          toolbarHeight: 40,
+          backgroundColor: Color(0xFFBAD8B6),
           flexibleSpace: FlexibleSpaceBar(
             background: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Welcome Back!',
-                    style: TextStyle(fontSize: 24, color: Colors.black87),
-                  ),
-                  const Text(
-                    'Find your favorite recipe',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Popular Recipes',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                      Column(
+                        children: [
+                          Text(
+                            'Welcome Back!',
+                            style: TextStyle(fontSize: 24, color: Colors.black87),
+                          ),
+                          Text(
+                            'Find your favorite recipe',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
                       ),
                       IconButton(
                         onPressed: () {},
@@ -107,12 +105,10 @@ class _RecipePageState extends State<RecipePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
                 ],
               ),
             ),
           ),
-          pinned: true,
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
