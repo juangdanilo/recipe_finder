@@ -12,7 +12,7 @@ class RecipeApi {
 
     List<dynamic> data = jsonDecode(response.body);
 
-    // Convertir la lista dinámica a una lista de mapas y usar recipesFromSnapshot
+    // Convert the dinamic list to a list of maps
     return Recipe.recipesFromSnapshot(data.cast<Map<String, dynamic>>());
   }
 }
