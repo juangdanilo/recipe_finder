@@ -43,6 +43,61 @@ class _RecipePageState extends State<RecipePage> {
     );
   }
 
+  void _showRecipeDetails(Recipe recipe) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: true,
+          builder: (context, scrollController) {
+            return CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  expandedHeight: 300,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Image.network(
+                      recipe.image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              recipe.name,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Tiempo total: ${recipe.totalTime} minutos',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   Widget _buildBody() {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -80,7 +135,7 @@ class _RecipePageState extends State<RecipePage> {
             builder: (context, constraints) {
               final top = constraints.biggest.height;
               final isCollapsed = top <= kToolbarHeight + 40;
-             final opacity = ((top - 94) / (254 - 94)).clamp(0.0, 1.0);
+              final opacity = ((top - 94) / (254 - 94)).clamp(0.0, 1.0);
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -131,8 +186,9 @@ class _RecipePageState extends State<RecipePage> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (context, index) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                  (context, index) => GestureDetector(
+                onTap: () => _showRecipeDetails(_recipes[index]),
+                //padding: const EdgeInsets.only(bottom: 12),
                 child: RecipeCard(recipe: _recipes[index]),
               ),
               childCount: _recipes.length,
