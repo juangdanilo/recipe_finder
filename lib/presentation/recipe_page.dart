@@ -1,116 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_finder/models/recipe.api.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_finder/models/recipe.dart';
 import 'package:recipe_finder/presentation/widgets/recipe_card.dart';
+import 'package:recipe_finder/providers/recipe_provider.dart';
 
-class RecipePage extends StatefulWidget {
+class RecipePage extends StatelessWidget {
   const RecipePage({super.key});
 
-  @override
-  State<RecipePage> createState() => _RecipePageState();
-}
-
-class _RecipePageState extends State<RecipePage> {
-  List<Recipe> _recipes = [];
-  bool _isLoading = true;
-  bool _hasError = false;
-
-  @override
-  void initState() {
-    super.initState();
-    getRecipes();
-  }
-
-  Future<void> getRecipes() async {
-    try {
-      final recipes = await RecipeApi.getRecipe();
-      setState(() {
-        _recipes = recipes;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _hasError = true;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RecipeProvider>(context);
+
     return Scaffold(
-      body: _buildBody(),
+      body: _buildBody(context, provider),
     );
   }
 
-  void _showRecipeDetails(Recipe recipe) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          expand: true,
-          builder: (context, scrollController) {
-            return CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverAppBar(
-                  pinned: true,
-                  expandedHeight: 300,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Image.network(
-                      recipe.image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              recipe.name,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Tiempo total: ${recipe.totalTime} minutos',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildBody() {
-    if (_isLoading) {
+  Widget _buildBody(BuildContext context, RecipeProvider provider) {
+    if (provider.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (_hasError) {
+    if (provider.hasError) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Error loading recipes'),
+            const Text('Error loading the recipes'),
             ElevatedButton(
-              onPressed: getRecipes,
+              onPressed: provider.loadRecipes,
               child: const Text('Retry'),
             ),
           ],
@@ -118,11 +37,9 @@ class _RecipePageState extends State<RecipePage> {
       );
     }
 
-    if (_recipes.isEmpty) {
+    if (provider.recipes.isEmpty) {
       return const Center(child: Text('There are no recipes available'));
     }
-
-
 
     return CustomScrollView(
       slivers: [
@@ -130,7 +47,7 @@ class _RecipePageState extends State<RecipePage> {
           pinned: true,
           expandedHeight: 200,
           toolbarHeight: 40,
-          backgroundColor: Color(0xFFBAD8B6),
+          backgroundColor: const Color(0xFFBAD8B6),
           flexibleSpace: LayoutBuilder(
             builder: (context, constraints) {
               final top = constraints.biggest.height;
@@ -158,7 +75,7 @@ class _RecipePageState extends State<RecipePage> {
                             Opacity(
                               opacity: opacity,
                               child: const Text(
-                                'Find your favorite recipe',
+                                'Find your favorite recipes',
                                 style: TextStyle(fontSize: 16, color: Colors.grey),
                               ),
                             ),
@@ -187,15 +104,80 @@ class _RecipePageState extends State<RecipePage> {
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
                   (context, index) => GestureDetector(
-                onTap: () => _showRecipeDetails(_recipes[index]),
-                //padding: const EdgeInsets.only(bottom: 12),
-                child: RecipeCard(recipe: _recipes[index]),
+                onTap: () => showRecipeDetails(context, provider.recipes[index]),
+                child: RecipeCard(recipe: provider.recipes[index]),
               ),
-              childCount: _recipes.length,
+              childCount: provider.recipes.length,
             ),
           ),
         ),
       ],
+    );
+  }
+
+  void showRecipeDetails(BuildContext context, Recipe recipe) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 1.0,
+          minChildSize: 0.95,
+          builder: (context, scrollController) {
+            return CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  floating: true,
+                  snap: true,
+                  expandedHeight: 200,
+                  leading: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Image.network(
+                      recipe.image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              recipe.name,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Total Time: ${recipe.totalTime} minutes',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
