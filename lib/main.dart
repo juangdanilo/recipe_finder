@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_finder/presentation/recipe_page.dart';
+import 'package:recipe_finder/providers/recipe_provider.dart';
+import 'package:recipe_finder/services/recipe_service.dart';
 
 void main() {
-  runApp(const HomePage());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => RecipeProvider(RecipeService())..loadRecipes(),
+        ),
+      ],
+      child: const HomePage(),
+    ),
+  );
 }
 
 class HomePage extends StatelessWidget {
@@ -10,9 +22,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
-        body: const RecipePage(),
+        body: RecipePage(),
       ),
     );
   }
