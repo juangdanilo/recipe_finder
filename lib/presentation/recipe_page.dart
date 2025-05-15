@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_finder/models/recipe.dart';
 import 'package:recipe_finder/presentation/widgets/recipe_card.dart';
+import 'package:recipe_finder/presentation/widgets/search_dialog.dart';
 import 'package:recipe_finder/providers/recipe_provider.dart';
 
 class RecipePage extends StatelessWidget {
@@ -52,8 +53,8 @@ class RecipePage extends StatelessWidget {
             builder: (context, constraints) {
               final top = constraints.biggest.height;
               final isCollapsed = top <= kToolbarHeight + 40;
-              final opacity = ((top - 94) / (254 - 94)).clamp(0.0, 1.0);
-
+              final opacity = ((top - 99) / (254 - 99)).clamp(0.0, 1.0);
+              print(opacity);
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
@@ -85,7 +86,19 @@ class RecipePage extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(top: isCollapsed ? 40 : 0),
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => SearchDialog(
+                                  title: 'Search Recipes',
+                                  hintText: 'Search Ingredients or names',
+                                  onSearch: (query) {
+                                    // search logic here
+                                    // provider.searchRecipes(query);
+                                  },
+                                ),
+                              );
+                            },
                             icon: const Icon(Icons.search_outlined),
                             color: const Color(0xFFE1EACD),
                             iconSize: 28,
