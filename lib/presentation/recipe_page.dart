@@ -136,7 +136,7 @@ class RecipePage extends StatelessWidget {
         return DraggableScrollableSheet(
           expand: false,
           initialChildSize: 1.0,
-          minChildSize: 0.95,
+          minChildSize: 0.98,
           builder: (context, scrollController) {
             return CustomScrollView(
               controller: scrollController,
@@ -146,6 +146,7 @@ class RecipePage extends StatelessWidget {
                   floating: true,
                   snap: true,
                   expandedHeight: 200,
+                  toolbarHeight: 80,
                   leading: Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: IconButton(
