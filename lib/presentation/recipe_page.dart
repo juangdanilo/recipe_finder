@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_finder/models/recipe.dart';
 import 'package:recipe_finder/presentation/widgets/recipe_card.dart';
+import 'package:recipe_finder/presentation/widgets/recipe_detail_view.dart';
 import 'package:recipe_finder/presentation/widgets/search_dialog.dart';
 import 'package:recipe_finder/providers/recipe_provider.dart';
 
@@ -54,7 +55,6 @@ class RecipePage extends StatelessWidget {
               final top = constraints.biggest.height;
               final isCollapsed = top <= kToolbarHeight + 40;
               final opacity = ((top - 99) / (254 - 99)).clamp(0.0, 1.0);
-              print(opacity);
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
@@ -163,26 +163,7 @@ class RecipePage extends StatelessWidget {
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              recipe.name,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Total Time: ${recipe.totalTime} minutes',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
+                      RecipeDetailView(recipe: recipe),
                     ],
                   ),
                 ),
